@@ -12,11 +12,46 @@ class PeopleService {
 		});
 	}
 
+	getPeopleById(req, res) {
+		connection.query(queries.getPeopleById, [req.params.id], async (err, rows, fields) => {
+			if (!err) {
+				await res.json(rows[0]);
+			} else {
+				console.log(err);
+			}
+		});
+	}
+
 	getPeopleByName(req, res) {
-		console.log(req.query.name);
+		connection.query(
+			queries.getPeopleByName,
+			[req.query.firstName],
+			async (err, rows, fields) => {
+				if (!err) {
+					await res.json(rows[0]);
+				} else {
+					console.log(err);
+				}
+			}
+		);
+	}
+
+	getPeopleByGender(req, res) {
+		connection.query(
+			queries.getPeopleByGender,
+			[req.query.gender],
+			async (err, rows, fields) => {
+				if (!err) {
+					await res.json(rows[0]);
+				} else {
+					console.log(err);
+				}
+			}
+		);
 	}
 
 	createPeople(req, res) {
+		console.log(req.body);
 		const newPeople = new People(req.body);
 		connection.query(
 			queries.createPeople,
@@ -67,7 +102,7 @@ class PeopleService {
 			],
 			(err, rows, fields) => {
 				if (!err) {
-					res.json({ status: 'people UPDATED' });
+					res.json({ status: 202, message: 'Updated' });
 				} else {
 					console.log(err);
 					res.json({ status: 'error al MODIFICAR intente de nuevo' });
